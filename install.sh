@@ -44,8 +44,10 @@ install_required() {
     apt install -y waydroid 
     apt install -y git
     apt install -y python3-venv
+    apt install -y pipx
     apt install -y adb
     apt install -y lzip
+    apt install -y openjdk-17-jdk
 
     snap install code --classic
     snap install zaproxy --classic
@@ -101,6 +103,11 @@ install_scrcpy() {
     echo "[+] scrcpy installed successfully at /usr/bin/scrcpy"
 }
 
+install_vscode_ext() {
+    code --install-extension LoyieKing.smalise
+    code --install-extension Surendrajat.apklab
+}
+
 main() {
     if [ "$EUID" -ne 0 ]; then
         echo "[!] This script must be run as root. Might want to run with sudo"
@@ -113,6 +120,7 @@ main() {
     install_required
     install_waydroid_script
     install_scrcpy
+    install_vscode_ext
 
     waydroid init
 }
