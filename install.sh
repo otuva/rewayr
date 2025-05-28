@@ -44,6 +44,7 @@ install_required() {
     apt install -y waydroid 
     apt install -y git
     apt install -y python3-venv
+    apt install -y adb
 
     snap install code --classic
     snap install zaproxy --classic
@@ -90,13 +91,13 @@ install_scrcpy() {
     echo "[*] Extracting $archive..."
     tar -xf "$archive"
 
-    echo "[*] Installing scrcpy to /usr/local/bin/..."
-    install "$extract_dir/scrcpy" /usr/local/bin/scrcpy
+    echo "[*] Installing scrcpy to /usr/bin/..."
+    install "$extract_dir/scrcpy" /usr/bin/scrcpy
 
     echo "[*] Cleaning up..."
     rm -rf "$archive" "$extract_dir"
 
-    echo "[+] scrcpy installed successfully at /usr/local/bin/scrcpy"
+    echo "[+] scrcpy installed successfully at /usr/bin/scrcpy"
 }
 
 main() {
