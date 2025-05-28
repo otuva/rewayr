@@ -24,8 +24,14 @@ main( ) {
     waydroid first-launch &
 
     cd waydroid_script
-    sudo venv/bin/python3 main.py install gapps libhoudini
-    touch .gapps
+    if [ ! -f .gapps ]; then
+        echo "[*] Installing GApps and libhoudini..."
+        sudo venv/bin/python3 main.py install gapps libhoudini
+        touch .gapps
+        echo "[+] Installation complete."
+    else
+        echo "[!] GApps already installed. Skipping."
+    fi
 
     get_ca_cert_path
     sudo venv/bin/python3 main.py install mitm --ca-cert $CA_CERT_PATH
