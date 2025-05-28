@@ -108,6 +108,12 @@ install_vscode_ext() {
     code --install-extension Surendrajat.apklab
 }
 
+install_quarkengine() {
+    pipx ensurepath
+    exec bash
+    pipx install quark-engine
+}
+
 main() {
     if [ "$EUID" -ne 0 ]; then
         echo "[!] This script must be run as root. Might want to run with sudo"
@@ -121,6 +127,7 @@ main() {
     install_waydroid_script
     install_scrcpy
     install_vscode_ext
+    install_quarkengine
 
     waydroid init
 }
