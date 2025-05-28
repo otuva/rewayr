@@ -4,12 +4,12 @@ set -e
 
 add_waydroid_repo() {
     if [ -e /etc/os-release ]; then
-        OS_RELEASE=/etc/os-release
+        local OS_RELEASE=/etc/os-release
     elif [ -e /usr/lib/os-release ]; then
-        OS_RELEASE=/usr/lib/os-release
+        local OS_RELEASE=/usr/lib/os-release
     fi
 
-    UPSTREAM_CODENAME=$(grep "^UBUNTU_CODENAME=" ${OS_RELEASE} | cut -d'=' -f2)
+    local UPSTREAM_CODENAME=$(grep "^UBUNTU_CODENAME=" ${OS_RELEASE} | cut -d'=' -f2)
 
     if [ -z "${UPSTREAM_CODENAME}" ]; then
         UPSTREAM_CODENAME=$(grep "^DEBIAN_CODENAME=" ${OS_RELEASE} | cut -d'=' -f2)
@@ -58,6 +58,47 @@ install_waydroid_script() {
     venv/bin/pip install -r requirements.txt
 }
 
+install_scrcpy() {
+    if command -v scrcpy >/dev/null 2>&1; then
+        echo "[+] scrcpy is already installed at $(command -v scrcpy)"
+        return
+    fi
+
+    local url="https://github.com/Genymobile/scrcpy/releases/download/v3.2/scrcpy-linux-x86_64-v3.2.tar.gz"
+    local extract_dir="scrcpy-linux-x86_64-v3.2"
+    local archive="${extract_dir}.tar.gz"
+    local expected_hash="df6cf000447428fcde322022848d655ff0211d98688d0f17cbbf21be9c1272be"
+    
+
+    echo "[*] Downloading $archive..."
+    curl -L -o "$archive" "$url"
+
+    echo "[*] Verifying SHA-256 hash..."
+    local downloaded_hash
+    downloaded_hash=$(sha256sum "$archive" | awk '{print $1}')
+
+    if [ "$downloaded_hash" != "$expected_hash" ]; then
+        echo "[!] Hash mismatch!"
+        echo "Expected: $expected_hash"
+        echo "Got     : $downloaded_hash"
+        rm "$archive"
+        exit 1
+    fi
+
+    echo "[+] Hash verified."
+
+    echo "[*] Extracting $archive..."
+    tar -xf "$archive"
+
+    echo "[*] Installing scrcpy to /usr/local/bin/..."
+    install "$extract_dir/scrcpy" /usr/local/bin/scrcpy
+
+    echo "[*] Cleaning up..."
+    rm -rf "$archive" "$extract_dir"
+
+    echo "[+] scrcpy installed successfully at /usr/local/bin/scrcpy"
+}
+
 main() {
     if [ "$EUID" -ne 0 ]; then
         echo "[!] This script must be run as root. Might want to run with sudo"
@@ -69,6 +110,7 @@ main() {
     add_waydroid_repo
     install_required
     install_waydroid_script
+    install_scrcpy
 
     waydroid init
 }
