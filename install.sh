@@ -50,15 +50,17 @@ install_required() {
 }
 
 install_waydroid_script() {
-    git clone https://github.com/casualsnek/waydroid_script
+    if [ ! -d "waydroid_script" ] ; then
+        git clone https://github.com/casualsnek/waydroid_script
+    fi
     cd waydroid_script
     python3 -m venv venv
     venv/bin/pip install -r requirements.txt
-    sudo venv/bin/python3 main.py
 }
 
 main() {
     apt install curl
+
     add_waydroid_repo
     install_required
     install_waydroid_script
