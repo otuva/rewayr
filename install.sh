@@ -3,7 +3,9 @@
 set -e
 
 install_prerequisites() {
-    apt install curl ca-certificates -y
+    apt install git -y
+    apt install curl -y
+    apt install ca-certificates -y
 }
 
 add_waydroid_repo() {
@@ -44,6 +46,14 @@ add_waydroid_repo() {
     apt update
 }
 
+install_waydroid_script() {
+    git clone https://github.com/casualsnek/waydroid_script
+    cd waydroid_script
+    python3 -m venv venv
+    venv/bin/pip install -r requirements.txt
+    sudo venv/bin/python3 main.py
+}
+
 install_required() {
     apt install waydroid -y
 
@@ -56,6 +66,7 @@ main() {
     install_prerequisites
     add_waydroid_repo
     install_required
+    install_waydroid_script
 }
 
 main
