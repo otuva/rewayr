@@ -59,7 +59,12 @@ install_waydroid_script() {
 }
 
 main() {
-    apt install curl
+    if [ "$EUID" -ne 0 ]; then
+        echo "[!] This script must be run as root. Please use sudo or log in as root."
+        exit 1
+    fi
+
+    apt install -y curl
 
     add_waydroid_repo
     install_required
