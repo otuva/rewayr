@@ -69,6 +69,8 @@ main() {
     add_waydroid_repo
     install_required
     install_waydroid_script
+
+    waydroid init
 }
 
 main
