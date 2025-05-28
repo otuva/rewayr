@@ -2,12 +2,6 @@
 
 set -e
 
-install_prerequisites() {
-    apt install git -y
-    apt install curl -y
-    apt install ca-certificates -y
-}
-
 add_waydroid_repo() {
     if [ -e /etc/os-release ]; then
         OS_RELEASE=/etc/os-release
@@ -46,6 +40,15 @@ add_waydroid_repo() {
     apt update
 }
 
+install_required() {
+    apt install waydroid -y
+    apt install git -y
+    apt install python3-venv -y
+
+    snap install code --classic
+    snap install zaproxy --classic
+}
+
 install_waydroid_script() {
     git clone https://github.com/casualsnek/waydroid_script
     cd waydroid_script
@@ -54,16 +57,8 @@ install_waydroid_script() {
     sudo venv/bin/python3 main.py
 }
 
-install_required() {
-    apt install waydroid -y
-
-    snap install code --classic
-    snap install zaproxy --classic
-}
-
-
 main() {
-    install_prerequisites
+    apt install curl
     add_waydroid_repo
     install_required
     install_waydroid_script
