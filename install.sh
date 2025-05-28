@@ -41,9 +41,9 @@ add_waydroid_repo() {
 }
 
 install_required() {
-    apt install waydroid -y
-    apt install git -y
-    apt install python3-venv -y
+    apt install -y waydroid 
+    apt install -y git
+    apt install -y python3-venv
 
     snap install code --classic
     snap install zaproxy --classic
@@ -60,7 +60,7 @@ install_waydroid_script() {
 
 main() {
     if [ "$EUID" -ne 0 ]; then
-        echo "[!] This script must be run as root. Please use sudo or log in as root."
+        echo "[!] This script must be run as root. Might want to run with sudo"
         exit 1
     fi
 
