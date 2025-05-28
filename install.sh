@@ -1,34 +1,36 @@
+#!/bin/bash
+
 set -e
 
+install_prerequisites() {
+    apt install curl ca-certificates -y
+}
+
 add_waydroid_repo() {
-    if [ -n "$1" ]; then
-        UPSTREAM_CODENAME="$1"
-    else
-        if [ -e /etc/os-release ]; then
-            OS_RELEASE=/etc/os-release
-        elif [ -e /usr/lib/os-release ]; then
-            OS_RELEASE=/usr/lib/os-release
-        fi
+    if [ -e /etc/os-release ]; then
+        OS_RELEASE=/etc/os-release
+    elif [ -e /usr/lib/os-release ]; then
+        OS_RELEASE=/usr/lib/os-release
+    fi
 
-        UPSTREAM_CODENAME=$(grep "^UBUNTU_CODENAME=" ${OS_RELEASE} | cut -d'=' -f2)
+    UPSTREAM_CODENAME=$(grep "^UBUNTU_CODENAME=" ${OS_RELEASE} | cut -d'=' -f2)
 
-        if [ -z "${UPSTREAM_CODENAME}" ]; then
-            UPSTREAM_CODENAME=$(grep "^DEBIAN_CODENAME=" ${OS_RELEASE} | cut -d'=' -f2)
-        fi
+    if [ -z "${UPSTREAM_CODENAME}" ]; then
+        UPSTREAM_CODENAME=$(grep "^DEBIAN_CODENAME=" ${OS_RELEASE} | cut -d'=' -f2)
+    fi
 
-        if [ -z "${UPSTREAM_CODENAME}" ]; then
-            UPSTREAM_CODENAME=$(grep "^VERSION_CODENAME=" ${OS_RELEASE} | cut -d'=' -f2)
-        fi
+    if [ -z "${UPSTREAM_CODENAME}" ]; then
+        UPSTREAM_CODENAME=$(grep "^VERSION_CODENAME=" ${OS_RELEASE} | cut -d'=' -f2)
+    fi
 
-        # Debian 12+
-        if [ -z "${UPSTREAM_CODENAME}" ] && [ -e /etc/debian_version ]; then
-            UPSTREAM_CODENAME=$(cut -d / -f 1 /etc/debian_version)
-        fi
+    # Debian 12+
+    if [ -z "${UPSTREAM_CODENAME}" ] && [ -e /etc/debian_version ]; then
+        UPSTREAM_CODENAME=$(cut -d / -f 1 /etc/debian_version)
+    fi
 
-        if [ -z "${UPSTREAM_CODENAME}" ]; then
-            echo "[!] Could not detect your distribution. Please provide a valid option as first argument"
-            exit 1
-        fi
+    if [ -z "${UPSTREAM_CODENAME}" ]; then
+        echo "[!] Could not detect your distribution"
+        exit 1
     fi
 
     if ! [[ "${UPSTREAM_CODENAME}" =~ ^(mantic|focal|jammy|kinetic|lunar|noble|oracular|plucky|bookworm|bullseye|trixie|sid)$ ]]; then
@@ -42,8 +44,18 @@ add_waydroid_repo() {
     apt update
 }
 
+install_required() {
+    apt install waydroid -y
+
+    snap install code --classic
+    snap install zaproxy --classic
+}
+
+
 main() {
+    install_prerequisites
     add_waydroid_repo
+    install_required
 }
 
 main
