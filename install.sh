@@ -45,6 +45,7 @@ install_required() {
     apt install -y git
     apt install -y python3-venv
     apt install -y adb
+    apt install -y lzip
 
     snap install code --classic
     snap install zaproxy --classic
