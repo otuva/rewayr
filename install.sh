@@ -120,6 +120,7 @@ main() {
         exit 1
     fi
 
+    apt update
     apt install -y curl
 
     add_waydroid_repo
