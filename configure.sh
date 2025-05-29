@@ -37,6 +37,8 @@ main( ) {
     sudo venv/bin/python3 main.py install mitm --ca-cert $CA_CERT_PATH
 
     adb shell settings put global http_proxy "192.168.240.1:8080"
+
+    sudo venv/bin/python3 main.py certified
 }
 
 main
