@@ -34,10 +34,16 @@ add_waydroid_repo() {
         exit 1
     fi
 
-    curl --progress-bar --proto '=https' --tlsv1.2 -Sf https://repo.waydro.id/waydroid.gpg --output /usr/share/keyrings/waydroid.gpg
-    echo "deb [signed-by=/usr/share/keyrings/waydroid.gpg] https://repo.waydro.id/ ${UPSTREAM_CODENAME} main" | tee /etc/apt/sources.list.d/waydroid.list
+    if [ ! -f /usr/share/keyrings/waydroid.gpg ]; then
+        echo "[*] Adding Waydroid GPG key..."
+        curl --progress-bar --proto '=https' --tlsv1.2 -Sf https://repo.waydro.id/waydroid.gpg --output /usr/share/keyrings/waydroid.gpg
+    fi
 
-    apt update
+    if ! grep -q "repo.waydro.id" /etc/apt/sources.list.d/waydroid.list 2>/dev/null; then
+        echo "[*] Adding Waydroid APT repository..."
+        echo "deb [signed-by=/usr/share/keyrings/waydroid.gpg] https://repo.waydro.id/ ${UPSTREAM_CODENAME} main" | tee /etc/apt/sources.list.d/waydroid.list
+        apt update
+    fi
 }
 
 install_required() {
