@@ -110,14 +110,17 @@ install_scrcpy() {
 }
 
 install_vscode_ext() {
-    code --install-extension LoyieKing.smalise
-    code --install-extension Surendrajat.apklab
+    local target_user=${SUDO_USER:-$USER}
+
+    sudo -u "$target_user" code --install-extension LoyieKing.smalise
+    sudo -u "$target_user" code --install-extension Surendrajat.apklab
 }
 
 install_quarkengine() {
-    pipx ensurepath
-    exec bash
-    pipx install quark-engine
+    local target_user=${SUDO_USER:-$USER}
+
+    sudo -u "$target_user" pipx ensurepath
+    sudo -u "$target_user" pipx install quark-engine
 }
 
 main() {
