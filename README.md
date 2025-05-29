@@ -10,4 +10,6 @@
 - apklab
 - quark engine
 
+wget -qO- <URL> | sudo bash
+
 ## configures
